@@ -1,4 +1,4 @@
-CC=mpicc
+CC=mpicc.mpich
 CFLAGS= -c -g -Wall
 
 hello : mpi_shmem_HelloWorld.o
