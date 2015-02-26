@@ -1,5 +1,5 @@
 CC=mpicc
-CFLAGS= -g -Wall
+CFLAGS= -c -g -Wall
 
 hello : mpi_shmem_HelloWorld.o
 	$(CC) mpi_shmem_HelloWorld.o -o hello
