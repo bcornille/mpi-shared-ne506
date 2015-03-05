@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
 
 	long long i = 0;
 	long long nperp = NPERP;
+	/* Here we intentionally will try to write to one memory location from several processors.
+	 * This is a very bad thing to do if care is not taken to ensure updating between loads
+	 * and saves.  The output from this program will demonstrate why this way of programming
+	 * will not produce the desired result, and even worse it will produce an indeterminate
+	 * result. */
 	for(i = 0; i < nperp; i++) {
 		shptr[0]++;
 	}
