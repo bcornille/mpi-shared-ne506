@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "mpi.h"
 
-#define NPERP 1000;
+#define NPERP 1000000;
 
 int main(int argc, char *argv[])
 {
@@ -30,16 +30,21 @@ int main(int argc, char *argv[])
 	long long i = 0;
 	long long nperp = NPERP;
 	int one = 1;
+	MPI_Win_fence(0, shwin);
+	double time = -MPI_Wtime();
 	for(i = 0; i < nperp; i++) {
-		MPI_Accumulate(&one, 1, MPI_Int, 0, 0, 1, MPI_LONG_LONG, MPI_SUM, shwin);
+		MPI_Accumulate(&one, 1, MPI_INT, 0, 0, 1, MPI_LONG_LONG, MPI_SUM, shwin);
 	}
+	MPI_Win_fence(0, shwin);
+	time += MPI_Wtime();
 
 	int ssize;
 	MPI_Comm_size(shmcomm, &ssize);
 	long long Ntot = nperp*ssize;
 	if(srank == 0) {
 		if(shptr[0] == Ntot) {
-			printf("This might actually work...it really shouldn't.\n");
+			printf("This message should appear everytime because this works.\n");
+			printf("The looping took %f seconds this way.\n", time);
 		} else {
 			printf("The shared accumulator only counted to %lld, "
 					"when it should have gotten to %lld.\n"
