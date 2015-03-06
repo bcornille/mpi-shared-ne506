@@ -25,9 +25,10 @@ int main(int argc, char *argv[])
 {
 	double rn;
 	long long i;
-	long long nrand, ntot;
+	long long nrand, Ntot;
 	int gtype;
 	double *shptr;
+	double avg;
 	int disp_unit = sizeof(double);
 
 	// MPI initialization calls
@@ -36,8 +37,8 @@ int main(int argc, char *argv[])
 	MPI_Comm_rank(comm, &rank);
 
 	// MPI variables
-	MPI_Aing size = 0;
-	MPI_Win = shwin;
+	MPI_Aint size = 0;
+	MPI_Win shwin;
 	MPI_Comm shmcomm;
 
 	if(argc == 2) {
@@ -71,11 +72,13 @@ int main(int argc, char *argv[])
 	time += MPI_Wtime();
 
 	MPI_Comm_size(shmcomm, &ssize);
-	long long Ntot = nrand*ssize;
+	Ntot = nrand*ssize;
 	if(srank == 0) {
+		avg = shptr[0]/(float)Ntot;
 		printf("From global rank %d:\n"
-				"	The average value of %d generated random numbers was %f.\n",
-				rank, Ntot, shptr[0]/Ntot);
+				"	The average value of %lld generated random numbers was %f.\n"
+				"	This calculation took %f seconds.\n",
+				rank, Ntot, avg, time);
 	}
 
 	MPI_Win_free(&shwin);
