@@ -1,4 +1,4 @@
-CC=mpicc
+CC=mpicc.mpich
 CFLAGS= -c -g -Wall
 
 race : mpi_shmem_race.o
