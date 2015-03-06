@@ -1,4 +1,4 @@
-CC=mpicc.mpich
+CC=mpicc
 CFLAGS= -c -g -Wall
 
 accum : mpi_accum_test.o
