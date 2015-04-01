@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * This file will contain the main driver for the Shared Memory parallel Monte
+ * Carlo code.
+ *
+ ******************************************************************************/
+
+// Dependencies and necessary inclusions.
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
@@ -11,4 +18,11 @@
  * This capability should be added later. */
 #define SEED 987654321
 
-#include "globals.h"  // Variables that will be accessible in all routines.
+// Main program.
+int main(int argc, char *argv[])
+{
+	// Initialize the program based on input.
+	ShMemMC_MPI_Init(&argc, &argv);
+
+	return 0;
+}
