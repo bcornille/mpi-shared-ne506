@@ -6,7 +6,7 @@
  *
  * Contents:
  *
- *
+ * ShMemMC_MPI_Init - Main routine for initializing MPI for this program.
  *
  ******************************************************************************/
 
@@ -26,4 +26,6 @@ void ShMemMC_MPI_Init(int *argc, char* **argv)
 	MPI_Comm_split_type(all_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, &shmem_comm);
 	MPI_Comm_rank(shmem_comm, shmem_rank);
 	MPI_Comm_size(shmem_comm, shmem_size);
+
+	return 0;
 }
