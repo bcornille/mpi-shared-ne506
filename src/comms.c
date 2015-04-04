@@ -27,5 +27,11 @@ void ShMemMC_MPI_Init(int *argc, char* **argv)
 	MPI_Comm_rank(shmem_comm, shmem_rank);
 	MPI_Comm_size(shmem_comm, shmem_size);
 
+	if(argc == 1) {
+		Default_Geom();
+	} else {
+		Geom_Init(argv[1]);
+	}
+
 	return 0;
 }
