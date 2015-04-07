@@ -27,11 +27,14 @@ typedef struct Face {
 } Face
 
 typedef struct Cell {
+	int nfaces;
 	Face *faces;
 	Material *mat;
 } Cell
 
 // Routines
 void Geom_Init(char *File_in);
+
+void Default_Geom()
 
 #endif
