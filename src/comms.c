@@ -1,5 +1,7 @@
-/*******************************************************************************
- * This file will hold all the subroutines for general purpose communication.
+/***************************************************************************//*!
+ * \file
+ * \brief This file will hold all the subroutines for general purpose communication.
+ *
  * Major functionality of these subroutines include setting up important MPI
  * initialization and variables as well as cleaning up and finalizing MPI for
  * this program.
@@ -14,7 +16,11 @@
 #include <mpi.h>
 #include "comms.h"
 
-// Program specific initialization.
+//! Program specific initialization.
+/*! 
+ * \param argc pointer to number of arguments
+ * \param argv pointer to arguments
+ */
 void ShMemMC_MPI_Init(int *argc, char* **argv)
 {
 	// Standard MPI Initialization bits.
@@ -28,9 +34,9 @@ void ShMemMC_MPI_Init(int *argc, char* **argv)
 	MPI_Comm_size(shmem_comm, shmem_size);
 
 	if(argc == 1) {
-		Default_Geom();
+		Default_Geom();		// Use the default geometry.
 	} else {
-		Geom_Init(argv[1]);
+		Geom_Init(argv[1]);	// Generate the geometry based on the input file.
 	}
 
 	return 0;

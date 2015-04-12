@@ -1,6 +1,7 @@
-/*******************************************************************************
- * This file will contain the main driver for the Shared Memory parallel Monte
- * Carlo code.
+/**************************************************************************//*!
+ * \file
+ * \brief This file will contain the main driver for the Shared Memory parallel
+ * Monte Carlo code.
  *
  ******************************************************************************/
 
@@ -18,7 +19,11 @@
  * This capability should be added later. */
 #define SEED 987654321
 
-// Main program.
+//! Main program.
+/*!
+ * \param argc number of arguments
+ * \param argv arguments
+ */
 int main(int argc, char *argv[])
 {
 	// Initialize the program based on input.
