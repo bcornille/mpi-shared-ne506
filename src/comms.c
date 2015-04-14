@@ -16,28 +16,36 @@
 #include <mpi.h>
 #include "comms.h"
 
+// Define and initialize all external variables.
+MPI_Comm all_comm = MPI_COMM_WORLD;
+MPI_Comm shmem_comm;
+int all_rank;
+int all_size;
+int shmem_rank;
+int shmem_size;
+
 //! Program specific initialization.
 /*! 
  * \param argc pointer to number of arguments
  * \param argv pointer to arguments
  */
-void ShMemMC_MPI_Init(int *argc, char* **argv)
+void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 {
 	// Standard MPI Initialization bits.
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(all_comm, all_rank);
-	MPI_Comm_size(all_comm, all_size);
+	MPI_Init(argc_ptr, argv_ptr);
+	MPI_Comm_rank(all_comm, &all_rank);
+	MPI_Comm_size(all_comm, &all_size);
 
 	// Setting up shared memory communicator and ranks.
 	MPI_Comm_split_type(all_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, &shmem_comm);
-	MPI_Comm_rank(shmem_comm, shmem_rank);
-	MPI_Comm_size(shmem_comm, shmem_size);
+	MPI_Comm_rank(shmem_comm, &shmem_rank);
+	MPI_Comm_size(shmem_comm, &shmem_size);
 
-	if(argc == 1) {
+	if(*argc_ptr == 1) {
 		Default_Geom();		// Use the default geometry.
 	} else {
-		Geom_Init(argv[1]);	// Generate the geometry based on the input file.
+		Geom_Init(*argv_ptr[1]);	// Generate the geometry based on the input file.
 	}
 
-	return 0;
+	return;
 }

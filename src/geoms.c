@@ -14,6 +14,10 @@
 #include "dbg.h"
 #include "geoms.h"
 
+// Define all external varialbles at file scope.
+int nsurfs;
+Surface *surfs;
+
 //! Define a plane given a point and unit normal.
 /*!
  * \param point A given point that lies in the desired plane.
@@ -54,14 +58,14 @@ void Default_Geom()
 {
 	//! A rhombicuboctahedron has 24 faces.
 	nsurfs = 24;
-	surfs = malloc(nsurfs*sizeof(Suface));
+	surfs = (Surface*)calloc(nsurfs, sizeof(Surface));
 	check(surfs != NULL, "Could not allocate space for surfaces.");
 
 	Point temp_point;	// Temporary point used for creating each plane.
 	Vector temp_vec;	// Temporary vector used for creating each plane.
 
-	temp_point = {.x = 1, .y = 0, .z = 0};
-	temp_vec = {.u = 1, .v = 0, .w = 0};
+	temp_point = (Point){1,0,0};
+	temp_vec = (Vector){1,0,0};
 	surfs[0] = Create_Plane(temp_point, temp_vec);
 
 	return;

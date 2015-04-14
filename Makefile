@@ -1,5 +1,7 @@
 default: doxy src test
 
+.PHONY: doxy src test clean clean_doxy clean_src clean_tests
+
 doxy:
 	doxygen Doxyfile
 

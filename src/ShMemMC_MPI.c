@@ -6,8 +6,6 @@
  ******************************************************************************/
 
 // Dependencies and necessary inclusions.
-#include <stdio.h>
-#include <stdlib.h>
 #include <mpi.h>
 
 #define SIMPLE_SPRNG
@@ -18,6 +16,8 @@
  * one should generate a unique seed for production runs (usually from system time).
  * This capability should be added later. */
 #define SEED 987654321
+
+#include "comms.h"
 
 //! Main program.
 /*!

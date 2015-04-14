@@ -87,11 +87,11 @@ extern int nsurfs;
  * These surfaces include more than those that just define the cells.
  * They may also be used for sources, tallies, etc.
  */
-extern Surface *surfs = NULL;
+extern Surface *surfs;
 
 // Routines
 void Geom_Init(char *File_in);
 
-void Default_Geom()
+void Default_Geom();
 
 #endif
