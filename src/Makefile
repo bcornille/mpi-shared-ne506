@@ -1,4 +1,4 @@
-CC=mpicxx.mpich
+CC=mpicxx
 CFLAGS=-g -Wall
 INCPATH=-I/home/bcornille/usr/sprng/sprng5/include
 LIBPATH=-L/home/bcornille/usr/sprng/sprng5/lib
