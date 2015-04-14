@@ -54,6 +54,27 @@ typedef struct Cell {
 	Material mat;
 } Cell;
 
+//! Point structure definition.
+/*!
+ * A point has coordinates x, y, and z.
+ */
+typedef struct Point {
+	double x;	//!< x-coordinate.
+	double y;	//!< y-coordinate.
+	double z;	//!< z-coordinate.
+} Point;
+
+//! Vector structure definition.
+/*!
+ * A vector points a distance u in the x direction,
+ * v in the y direction, and w in the z direction.
+ */
+typedef struct Vector {
+	double u;	//!< Magnitude along x-coordinate.
+	double v;	//!< Magnitude along y-coordinate.
+	double w;	//!< Magnitude along z-coordinate.
+} Vector;
+
 // Routines
 void Geom_Init(char *File_in);
 
