@@ -51,7 +51,7 @@ typedef struct Face {
 typedef struct Cell {
 	int nfaces;		//!< Number of surfaces defining the cell exterior.
 	Face *faces;	//!< Pointer array to all faces.
-	Material mat;
+//	Material mat;	// Cell material.
 } Cell;
 
 //! Point structure definition.
@@ -74,6 +74,20 @@ typedef struct Vector {
 	double v;	//!< Magnitude along y-coordinate.
 	double w;	//!< Magnitude along z-coordinate.
 } Vector;
+
+//! Number of surfaces defined for the geometry.
+/*!
+ * These surfaces include more than those that just define the cells.
+ * They may also be used for sources, tallies, etc.
+ */
+extern int nsurfs;
+
+//! All surfaces defined in the geometry.
+/*!
+ * These surfaces include more than those that just define the cells.
+ * They may also be used for sources, tallies, etc.
+ */
+extern Surface *surfs = NULL;
 
 // Routines
 void Geom_Init(char *File_in);
