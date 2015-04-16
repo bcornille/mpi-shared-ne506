@@ -29,5 +29,7 @@ int main(int argc, char *argv[])
 	// Initialize the program based on input.
 	ShMemMC_MPI_Init(&argc, &argv);
 
+	ShMemMC_MPI_Finalize();
+
 	return 0;
 }

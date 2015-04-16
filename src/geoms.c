@@ -11,12 +11,15 @@
 
 // Dependencies and necessary inclusions.
 #include <stdlib.h>
+#include <mpi.h>
 #include "dbg.h"
 #include "geoms.h"
+#include "comms.h"
 
 // Define all external varialbles at file scope.
-int nsurfs;
-Surface *surfs;
+int nsurfs = 0;
+Surface *surfs = NULL;
+MPI_Win surfs_win;		// This may need to be moved out to a global scope.
 
 //! Define a plane given a point and unit normal.
 /*!
@@ -56,20 +59,48 @@ void Geom_Init(char *File_in)
  */
 void Default_Geom()
 {
+	// Temporary variables for shared memory allocation.
+	MPI_Aint surfs_size = 0;	// Could be reused for each memory allocation.
+	int surfs_disp;				// Array displacement for Surface structure.
+
 	//! A rhombicuboctahedron has 24 faces.
 	nsurfs = 24;
-	surfs = (Surface*)calloc(nsurfs, sizeof(Surface));
+	surfs_disp = sizeof(Surface);
+	if(shmem_rank == 0 ){
+		surfs_size = nsurfs*sizeof(Surface);
+	}
+	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, 
+			shmem_comm, &surfs, &surfs_win);
+	MPI_Win_shared_query(surfs_win, 0, &surfs_size, &surfs_disp, &surfs);
 	check(surfs != NULL, "Could not allocate space for surfaces.");
+	MPI_Win_fence(0, surfs_win);
 
-	Point temp_point;	// Temporary point used for creating each plane.
-	Vector temp_vec;	// Temporary vector used for creating each plane.
+	if(shmem_rank == 0) {
+		Point temp_point;	// Temporary point used for creating each plane.
+		Vector temp_vec;	// Temporary vector used for creating each plane.
 
-	temp_point = (Point){1,0,0};
-	temp_vec = (Vector){1,0,0};
-	surfs[0] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1,0,0};
+		temp_vec = (Vector){1,0,0};
+		surfs[0] = Create_Plane(temp_point, temp_vec);
+	}
+
+	MPI_Win_fence(0, surfs_win);	// Wait until the surfaces have been established.
 
 	return;
 
 error:
 	exit(1);
+}
+
+//! Free geometry elements.
+/*!
+ * Arrays that need freed:
+ * 	1. surfs
+ */
+void Free_Geom()
+{
+	// Free surfs. Free should be safe.
+	MPI_Win_free(&surfs_win);
+
+	return;
 }

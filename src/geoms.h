@@ -91,7 +91,7 @@ extern Surface *surfs;
 
 // Routines
 void Geom_Init(char *File_in);
-
 void Default_Geom();
+void Free_Geom();
 
 #endif

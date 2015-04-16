@@ -20,5 +20,6 @@ extern int shmem_size;	//!< Size of shared memory communicator
 
 // Routines.
 void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr);
+void ShMemMC_MPI_Finalize();
 
 #endif

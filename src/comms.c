@@ -49,3 +49,21 @@ void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 
 	return;
 }
+
+//! Clean up various portions of the code.
+/*!
+ * Allocated arrays in various code segments:
+ *
+ * 	* geoms:
+ * 		1. surfs
+ */
+void ShMemMC_MPI_Finalize()
+{
+	// Dismantle geometry.
+	Free_Geom();
+
+	// Finalize MPI.
+	MPI_Finalize();
+
+	return;
+}
