@@ -11,6 +11,7 @@
 
 // Dependencies and necessary inclusions.
 #include <stdlib.h>
+#include <math.h>
 #include <mpi.h>
 #include "dbg.h"
 #include "geoms.h"
@@ -64,7 +65,7 @@ void Default_Geom()
 	int surfs_disp;				// Array displacement for Surface structure.
 
 	//! A rhombicuboctahedron has 24 faces.
-	nsurfs = 24;
+	nsurfs = 26;
 	surfs_disp = sizeof(Surface);
 	if(shmem_rank == 0 ){
 		surfs_size = nsurfs*sizeof(Surface);
@@ -79,9 +80,86 @@ void Default_Geom()
 		Point temp_point;	// Temporary point used for creating each plane.
 		Vector temp_vec;	// Temporary vector used for creating each plane.
 
+		/* This huge chunk of code sets all the planes that make up the
+		 * rhombicuboctahedron. */
+		temp_point = (Point){0,0,1};
+		temp_vec = (Vector){0,0,1};
+		surfs[0] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(2),0,1/sqrt(2)};
+		temp_vec = (Vector){1/sqrt(2),0,1/sqrt(2)};
+		surfs[1] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+		temp_vec = (Vector){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+		surfs[2] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
+		temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
+		surfs[3] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+		temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+		surfs[4] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(2),0,1/sqrt(2)};
+		temp_vec = (Vector){-1/sqrt(2),0,1/sqrt(2)};
+		surfs[5] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+		temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+		surfs[6] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
+		temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
+		surfs[7] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+		temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+		surfs[8] = Create_Plane(temp_point, temp_vec);
 		temp_point = (Point){1,0,0};
 		temp_vec = (Vector){1,0,0};
-		surfs[0] = Create_Plane(temp_point, temp_vec);
+		surfs[9] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(2),1/sqrt(2),0};
+		temp_vec = (Vector){1/sqrt(2),1/sqrt(2),0};
+		surfs[10] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,1,0};
+		temp_vec = (Vector){0,1,0};
+		surfs[11] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(2),1/sqrt(2),0};
+		temp_vec = (Vector){-1/sqrt(2),1/sqrt(2),0};
+		surfs[12] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1,0,0};
+		temp_vec = (Vector){-1,0,0};
+		surfs[13] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(2),-1/sqrt(2),0};
+		temp_vec = (Vector){-1/sqrt(2),-1/sqrt(2),0};
+		surfs[14] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,-1,0};
+		temp_vec = (Vector){0,-1,0};
+		surfs[15] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(2),-1/sqrt(2),0};
+		temp_vec = (Vector){1/sqrt(2),-1/sqrt(2),0};
+		surfs[16] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(2),0,-1/sqrt(2)};
+		temp_vec = (Vector){1/sqrt(2),0,-1/sqrt(2)};
+		surfs[17] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+		temp_vec = (Vector){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+		surfs[18] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,1/sqrt(2),-1/sqrt(2)};
+		temp_vec = (Vector){0,1/sqrt(2),-1/sqrt(2)};
+		surfs[19] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+		temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+		surfs[20] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(2),0,-1/sqrt(2)};
+		temp_vec = (Vector){-1/sqrt(2),0,-1/sqrt(2)};
+		surfs[21] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+		temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+		surfs[22] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,-1/sqrt(2),-1/sqrt(2)};
+		temp_vec = (Vector){0,-1/sqrt(2),-1/sqrt(2)};
+		surfs[23] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+		temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+		surfs[24] = Create_Plane(temp_point, temp_vec);
+		temp_point = (Point){0,0,-1};
+		temp_vec = (Vector){0,0,-1};
+		surfs[25] = Create_Plane(temp_point, temp_vec);
 	}
 
 	MPI_Win_fence(0, surfs_win);	// Wait until the surfaces have been established.

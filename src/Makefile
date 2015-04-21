@@ -2,7 +2,7 @@ CC=mpicxx
 CFLAGS=-g -Wall
 INCPATH=-I/home/bcornille/usr/sprng/sprng5/include
 LIBPATH=-L/home/bcornille/usr/sprng/sprng5/lib
-LIBS=-lsprng
+LIBS=-lsprng -lm
 
 default: ShMemMC_MPI
 
