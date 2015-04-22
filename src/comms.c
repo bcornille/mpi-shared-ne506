@@ -1,6 +1,7 @@
 /***************************************************************************//*!
  * \file
- * \brief This file will hold all the subroutines for general purpose communication.
+ * \brief This file will hold all the subroutines for general purpose
+ * communication.
  *
  * Major functionality of these subroutines include setting up important MPI
  * initialization and variables as well as cleaning up and finalizing MPI for
@@ -37,14 +38,16 @@ void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 	MPI_Comm_size(all_comm, &all_size);
 
 	// Setting up shared memory communicator and ranks.
-	MPI_Comm_split_type(all_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, &shmem_comm);
+	MPI_Comm_split_type(all_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL,
+			&shmem_comm);
 	MPI_Comm_rank(shmem_comm, &shmem_rank);
 	MPI_Comm_size(shmem_comm, &shmem_size);
 
 	if(*argc_ptr == 1) {
 		Default_Geom();		// Use the default geometry.
 	} else {
-		Geom_Init(*argv_ptr[1]);	// Generate the geometry based on the input file.
+		Geom_Init(*argv_ptr[1]);	/* Generate the geometry based on the input
+									 * file. */
 	}
 
 	return;

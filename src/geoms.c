@@ -19,8 +19,11 @@
 
 // Define all external varialbles at file scope.
 int nsurfs = 0;
-Surface *surfs = NULL;
-MPI_Win surfs_win;		// This may need to be moved out to a global scope.
+Surface *surfs = NULL;	// Initialize surfs as NULL to easily check allocation.
+int ncells = 0;
+Cell *cells = NULL;		// Initialize cells as NULL to easily check allocation.
+MPI_Win surfs_win;		// Window defining the shared memory allocated to surfs.
+MPI_Win cells_win;		// Window defining the shared memory allocated to cells.
 
 //! Define a plane given a point and unit normal.
 /*!
@@ -44,6 +47,30 @@ Surface Create_Plane(Point point,Vector normal)
 	return new_surface;
 }
 
+//! Allocates faces for shared memory access.
+/*!
+ * \param cell Pointer to current cell that needs faces allocated.
+ */
+Face *Faces_Allocate_Shared(Cell *cell)
+{
+	MPI_Aint faces_size = 0;		// Size of memory allocation for faces.
+	int faces_disp = sizeof(Face);	// Array displacement for Face structure.
+
+	if(shmem_rank == 0) {
+		faces_size = cell->nfaces*sizeof(Face);
+	}
+	MPI_Win_allocate_shared(faces_size, faces_disp, MPI_INFO_NULL, shmem_comm,
+			&(cell->faces), &(cell->faces_win));
+	MPI_Win_shared_query(cell->faces_win, 0, &faces_size, &faces_disp, &(cell->faces));
+	check(cell->faces != NULL, "Could not allocate space for faces.");
+	MPI_Win_fence(0, cell->faces_win);
+
+	return cell->faces;
+
+error:
+	exit(1);
+}
+
 //! General geometry initalization.
 /*!
  * This is currently an unusable option.
@@ -60,18 +87,21 @@ void Geom_Init(char *File_in)
  */
 void Default_Geom()
 {
+	int i = 0;	// For looping.
 	// Temporary variables for shared memory allocation.
-	MPI_Aint surfs_size = 0;	// Could be reused for each memory allocation.
+	MPI_Aint surfs_size = 0;	// Size of memory allocation for surfs.
 	int surfs_disp;				// Array displacement for Surface structure.
+	MPI_Aint cells_size = 0;	// Size of memory allocation for cells.
+	int cells_disp;				// Array displacement for Cell structure.
 
-	//! A rhombicuboctahedron has 24 faces.
+	//! A rhombicuboctahedron has 26 faces.
 	nsurfs = 26;
 	surfs_disp = sizeof(Surface);
-	if(shmem_rank == 0 ){
+	if(shmem_rank == 0 ) {
 		surfs_size = nsurfs*sizeof(Surface);
 	}
-	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, 
-			shmem_comm, &surfs, &surfs_win);
+	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, shmem_comm,
+			&surfs, &surfs_win);
 	MPI_Win_shared_query(surfs_win, 0, &surfs_size, &surfs_disp, &surfs);
 	check(surfs != NULL, "Could not allocate space for surfaces.");
 	MPI_Win_fence(0, surfs_win);
@@ -161,8 +191,35 @@ void Default_Geom()
 		temp_vec = (Vector){0,0,-1};
 		surfs[25] = Create_Plane(temp_point, temp_vec);
 	}
-
 	MPI_Win_fence(0, surfs_win);	// Wait until the surfaces have been established.
+
+	ncells = 2;
+	cells_disp = sizeof(Cell);
+	if(shmem_rank == 0) {
+		cells_size = ncells*sizeof(Cell);
+	}
+	MPI_Win_allocate_shared(cells_size, cells_disp, MPI_INFO_NULL, shmem_comm,
+			&cells, &cells_win);
+	MPI_Win_shared_query(cells_win, 0, &cells_size, &cells_disp, &cells);
+	check(cells != NULL, "Could not allocate space for cells.");
+	MPI_Win_fence(0, cells_win);
+
+	if(shmem_rank == 0) {
+		cells[0].nfaces = 26;
+	}
+	cells[0].faces = Faces_Allocate_Shared(&cells[0]);
+	if(shmem_rank == 0) {
+		for(i = 0; i < cells[0].nfaces; i++) {
+			cells[0].faces[i].sense = NEG;
+			cells[0].faces[i].surf = &surfs[i];
+		}
+		cells[0].weight = 1.0;
+	}
+	MPI_Win_fence(0, cells[0].faces_win);
+
+	printf("Expect a value of -1: %f\n", cells[0].faces[0].surf->j);
+
+	MPI_Win_fence(0, cells[0].faces_win);
 
 	return;
 
@@ -174,10 +231,13 @@ error:
 /*!
  * Arrays that need freed:
  * 	1. surfs
+ * 	2. cells
+ * 		a. faces
  */
 void Free_Geom()
 {
-	// Free surfs. Free should be safe.
+	MPI_Win_free(&(cells[0].faces_win));
+	MPI_Win_free(&cells_win);
 	MPI_Win_free(&surfs_win);
 
 	return;

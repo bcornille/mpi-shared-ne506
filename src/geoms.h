@@ -49,8 +49,11 @@ typedef struct Face {
  * and a cell material.
  */
 typedef struct Cell {
-	int nfaces;		//!< Number of surfaces defining the cell exterior.
-	Face *faces;	//!< Pointer array to all faces.
+	int nfaces;			//!< Number of surfaces defining the cell exterior.
+	MPI_Win faces_win;	//!< Window to allocate shared space for faces.
+	Face *faces;		//!< Pointer array to all faces.
+	double weight;		/*!< How the cell should be weighted during particle
+						 *   transport. */
 //	Material mat;	// Cell material.
 } Cell;
 
@@ -88,6 +91,18 @@ extern int nsurfs;
  * They may also be used for sources, tallies, etc.
  */
 extern Surface *surfs;
+
+//! Number of cells defined for the geometry.
+/*!
+ * All cells defined are used for the particle transport.
+ */
+extern int ncells;
+
+//! All cells defined in the geometry.
+/*!
+ * Cells must be convex otherwise there will be errors.
+ */
+extern Cell *cells;
 
 // Routines
 void Geom_Init(char *File_in);
