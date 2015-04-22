@@ -62,8 +62,8 @@ Face *Faces_Allocate_Shared(Cell *cell)
 	MPI_Win_allocate_shared(faces_size, faces_disp, MPI_INFO_NULL, shmem_comm,
 			&(cell->faces), &(cell->faces_win));
 	MPI_Win_shared_query(cell->faces_win, 0, &faces_size, &faces_disp, &(cell->faces));
-	check(cell->faces != NULL, "Could not allocate space for faces.");
 	MPI_Win_fence(0, cell->faces_win);
+	check(cell->faces != NULL, "Could not allocate space for faces.");
 
 	return cell->faces;
 
@@ -103,8 +103,8 @@ void Default_Geom()
 	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, shmem_comm,
 			&surfs, &surfs_win);
 	MPI_Win_shared_query(surfs_win, 0, &surfs_size, &surfs_disp, &surfs);
-	check(surfs != NULL, "Could not allocate space for surfaces.");
 	MPI_Win_fence(0, surfs_win);
+	check(surfs != NULL, "Could not allocate space for surfaces.");
 
 	if(shmem_rank == 0) {
 		Point temp_point;	// Temporary point used for creating each plane.
@@ -191,7 +191,7 @@ void Default_Geom()
 		temp_vec = (Vector){0,0,-1};
 		surfs[25] = Create_Plane(temp_point, temp_vec);
 	}
-	MPI_Win_fence(0, surfs_win);	// Wait until the surfaces have been established.
+	MPI_Win_fence(0, surfs_win);
 
 	ncells = 2;
 	cells_disp = sizeof(Cell);
@@ -201,12 +201,13 @@ void Default_Geom()
 	MPI_Win_allocate_shared(cells_size, cells_disp, MPI_INFO_NULL, shmem_comm,
 			&cells, &cells_win);
 	MPI_Win_shared_query(cells_win, 0, &cells_size, &cells_disp, &cells);
-	check(cells != NULL, "Could not allocate space for cells.");
 	MPI_Win_fence(0, cells_win);
+	check(cells != NULL, "Could not allocate space for cells.");
 
 	if(shmem_rank == 0) {
 		cells[0].nfaces = 26;
 	}
+	MPI_Win_fence(0, cells_win);
 	cells[0].faces = Faces_Allocate_Shared(&cells[0]);
 	if(shmem_rank == 0) {
 		for(i = 0; i < cells[0].nfaces; i++) {
@@ -217,9 +218,7 @@ void Default_Geom()
 	}
 	MPI_Win_fence(0, cells[0].faces_win);
 
-	printf("Expect a value of -1: %f\n", cells[0].faces[0].surf->j);
-
-	MPI_Win_fence(0, cells[0].faces_win);
+	printf("Expect a value of 1: %f\n", cells[0].weight);
 
 	return;
 
