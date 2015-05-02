@@ -50,7 +50,6 @@ typedef struct Face {
  */
 typedef struct Cell {
 	int nfaces;			//!< Number of surfaces defining the cell exterior.
-	MPI_Win faces_win;	//!< Window to allocate shared space for faces.
 	Face *faces;		//!< Pointer array to all faces.
 	double weight;		/*!< How the cell should be weighted during particle
 						 *   transport. */

@@ -47,23 +47,14 @@ Surface Create_Plane(Point point,Vector normal)
 	return new_surface;
 }
 
-//! Allocates faces for shared memory access.
+//! Allocates faces.
 /*!
  * \param cell Pointer to current cell that needs faces allocated.
  */
-Face *Faces_Allocate_Shared(Cell *cell)
+Face *Faces_Allocate(Cell *cell)
 {
-	MPI_Aint faces_size = 0;		// Size of memory allocation for faces.
-	int faces_disp = sizeof(Face);	// Array displacement for Face structure.
-
-	if(shmem_rank == 0) {
-		faces_size = cell->nfaces*sizeof(Face);
-	}
-	MPI_Win_allocate_shared(faces_size, faces_disp, MPI_INFO_NULL, shmem_comm,
-			&(cell->faces), &(cell->faces_win));
-	MPI_Win_shared_query(cell->faces_win, 0, &faces_size, &faces_disp, &(cell->faces));
+	cell->faces = (Face*)malloc(cell->nfaces*sizeof(Face));
 	check(cell->faces != NULL, "Could not allocate space for faces.");
-	MPI_Win_fence(0, cell->faces_win);
 
 	return cell->faces;
 
@@ -88,151 +79,107 @@ void Geom_Init(char *File_in)
 void Default_Geom()
 {
 	int i = 0;	// For looping.
-	// Temporary variables for shared memory allocation.
-	MPI_Aint surfs_size = 0;	// Size of memory allocation for surfs.
-	int surfs_disp;				// Array displacement for Surface structure.
-	MPI_Aint cells_size = 0;	// Size of memory allocation for cells.
-	int cells_disp;				// Array displacement for Cell structure.
 
 	//! A rhombicuboctahedron has 26 faces.
 	nsurfs = 26;
-	surfs_disp = sizeof(Surface);
-	if(shmem_rank == 0 ) {
-		surfs_size = nsurfs*sizeof(Surface);
-	}
-	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, shmem_comm,
-			&surfs, &surfs_win);
-	MPI_Win_shared_query(surfs_win, 0, &surfs_size, &surfs_disp, &surfs);
+	surfs = (Surface*)malloc(nsurfs*sizeof(Surface));
 	check(surfs != NULL, "Could not allocate space for surfaces.");
 
-	MPI_Win_fence(0, surfs_win);
-	if(shmem_rank == 0) {
-		Point temp_point;	// Temporary point used for creating each plane.
-		Vector temp_vec;	// Temporary vector used for creating each plane.
+	Point temp_point;	// Temporary point used for creating each plane.
+	Vector temp_vec;	// Temporary vector used for creating each plane.
 
-		/* This huge chunk of code sets all the planes that make up the
-		 * rhombicuboctahedron. */
-		temp_point = (Point){0,0,1};
-		temp_vec = (Vector){0,0,1};
-		surfs[0] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(2),0,1/sqrt(2)};
-		temp_vec = (Vector){1/sqrt(2),0,1/sqrt(2)};
-		surfs[1] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
-		temp_vec = (Vector){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
-		surfs[2] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
-		temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
-		surfs[3] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
-		temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
-		surfs[4] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(2),0,1/sqrt(2)};
-		temp_vec = (Vector){-1/sqrt(2),0,1/sqrt(2)};
-		surfs[5] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
-		temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
-		surfs[6] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
-		temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
-		surfs[7] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
-		temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
-		surfs[8] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1,0,0};
-		temp_vec = (Vector){1,0,0};
-		surfs[9] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(2),1/sqrt(2),0};
-		temp_vec = (Vector){1/sqrt(2),1/sqrt(2),0};
-		surfs[10] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,1,0};
-		temp_vec = (Vector){0,1,0};
-		surfs[11] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(2),1/sqrt(2),0};
-		temp_vec = (Vector){-1/sqrt(2),1/sqrt(2),0};
-		surfs[12] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1,0,0};
-		temp_vec = (Vector){-1,0,0};
-		surfs[13] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(2),-1/sqrt(2),0};
-		temp_vec = (Vector){-1/sqrt(2),-1/sqrt(2),0};
-		surfs[14] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,-1,0};
-		temp_vec = (Vector){0,-1,0};
-		surfs[15] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(2),-1/sqrt(2),0};
-		temp_vec = (Vector){1/sqrt(2),-1/sqrt(2),0};
-		surfs[16] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(2),0,-1/sqrt(2)};
-		temp_vec = (Vector){1/sqrt(2),0,-1/sqrt(2)};
-		surfs[17] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
-		temp_vec = (Vector){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
-		surfs[18] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,1/sqrt(2),-1/sqrt(2)};
-		temp_vec = (Vector){0,1/sqrt(2),-1/sqrt(2)};
-		surfs[19] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
-		temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
-		surfs[20] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(2),0,-1/sqrt(2)};
-		temp_vec = (Vector){-1/sqrt(2),0,-1/sqrt(2)};
-		surfs[21] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
-		temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
-		surfs[22] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,-1/sqrt(2),-1/sqrt(2)};
-		temp_vec = (Vector){0,-1/sqrt(2),-1/sqrt(2)};
-		surfs[23] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
-		temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
-		surfs[24] = Create_Plane(temp_point, temp_vec);
-		temp_point = (Point){0,0,-1};
-		temp_vec = (Vector){0,0,-1};
-		surfs[25] = Create_Plane(temp_point, temp_vec);
-	}
-	MPI_Win_fence(0, surfs_win);
+	/* This huge chunk of code sets all the planes that make up the
+	 * rhombicuboctahedron. */
+	temp_point = (Point){0,0,1};
+	temp_vec = (Vector){0,0,1};
+	surfs[0] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(2),0,1/sqrt(2)};
+	temp_vec = (Vector){1/sqrt(2),0,1/sqrt(2)};
+	surfs[1] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+	temp_vec = (Vector){1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+	surfs[2] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
+	temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
+	surfs[3] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+	temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),1/sqrt(3)};
+	surfs[4] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(2),0,1/sqrt(2)};
+	temp_vec = (Vector){-1/sqrt(2),0,1/sqrt(2)};
+	surfs[5] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+	temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+	surfs[6] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,1/sqrt(2),1/sqrt(2)};
+	temp_vec = (Vector){0,1/sqrt(2),1/sqrt(2)};
+	surfs[7] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+	temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),1/sqrt(3)};
+	surfs[8] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1,0,0};
+	temp_vec = (Vector){1,0,0};
+	surfs[9] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(2),1/sqrt(2),0};
+	temp_vec = (Vector){1/sqrt(2),1/sqrt(2),0};
+	surfs[10] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,1,0};
+	temp_vec = (Vector){0,1,0};
+	surfs[11] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(2),1/sqrt(2),0};
+	temp_vec = (Vector){-1/sqrt(2),1/sqrt(2),0};
+	surfs[12] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1,0,0};
+	temp_vec = (Vector){-1,0,0};
+	surfs[13] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(2),-1/sqrt(2),0};
+	temp_vec = (Vector){-1/sqrt(2),-1/sqrt(2),0};
+	surfs[14] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,-1,0};
+	temp_vec = (Vector){0,-1,0};
+	surfs[15] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(2),-1/sqrt(2),0};
+	temp_vec = (Vector){1/sqrt(2),-1/sqrt(2),0};
+	surfs[16] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(2),0,-1/sqrt(2)};
+	temp_vec = (Vector){1/sqrt(2),0,-1/sqrt(2)};
+	surfs[17] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+	temp_vec = (Vector){1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+	surfs[18] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,1/sqrt(2),-1/sqrt(2)};
+	temp_vec = (Vector){0,1/sqrt(2),-1/sqrt(2)};
+	surfs[19] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+	temp_vec = (Vector){-1/sqrt(3),1/sqrt(3),-1/sqrt(3)};
+	surfs[20] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(2),0,-1/sqrt(2)};
+	temp_vec = (Vector){-1/sqrt(2),0,-1/sqrt(2)};
+	surfs[21] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+	temp_vec = (Vector){-1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+	surfs[22] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,-1/sqrt(2),-1/sqrt(2)};
+	temp_vec = (Vector){0,-1/sqrt(2),-1/sqrt(2)};
+	surfs[23] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+	temp_vec = (Vector){1/sqrt(3),-1/sqrt(3),-1/sqrt(3)};
+	surfs[24] = Create_Plane(temp_point, temp_vec);
+	temp_point = (Point){0,0,-1};
+	temp_vec = (Vector){0,0,-1};
+	surfs[25] = Create_Plane(temp_point, temp_vec);
 
-	ncells = 2;
-	cells_disp = sizeof(Cell);
-	if(shmem_rank == 0) {
-		cells_size = ncells*sizeof(Cell);
-	}
-	MPI_Win_allocate_shared(cells_size, cells_disp, MPI_INFO_NULL, shmem_comm,
-			&cells, &cells_win);
-	MPI_Win_shared_query(cells_win, 0, &cells_size, &cells_disp, &cells);
+	ncells = 1;
+	cells = (Cell*)malloc(ncells*sizeof(Cell));
 	check(cells != NULL, "Could not allocate space for cells.");
 
-	MPI_Win_fence(0, cells_win);
-	if(shmem_rank == 0) {
-		cells[0].nfaces = 26;
+	cells[0].nfaces = 26;
+	cells[0].faces = Faces_Allocate(&cells[0]);
+	for(i = 0; i < cells[0].nfaces; i++) {
+		cells[0].faces[i].sense = NEG;
+		cells[0].faces[i].surf = &surfs[i];
 	}
-	MPI_Win_fence(0, cells_win);
-	cells[0].faces = Faces_Allocate_Shared(&cells[0]);
-	if(shmem_rank == 0) {
-		for(i = 0; i < cells[0].nfaces; i++) {
-			cells[0].faces[i].sense = NEG;
-			cells[0].faces[i].surf = &surfs[i];
-		}
-		cells[0].weight = 1.0;
-	}
-	MPI_Win_fence(0, cells[0].faces_win);
-	MPI_Win_fence(0, cells_win);
-	if(shmem_rank == 0) {
-		cells[1].nfaces = 26;
-	}
-	MPI_Win_fence(0, cells_win);
-	cells[1].faces = Faces_Allocate_Shared(&cells[1]);
-	if(shmem_rank == 0) {
-		for(i = 0; i < cells[1].nfaces; i++) {
-			cells[1].faces[i].sense = POS;
-			cells[1].faces[i].surf = &surfs[i];
-		}
-		cells[1].weight = 0.0;
-	}
-	MPI_Win_fence(0, cells[1].faces_win);
-
-	printf("Expect a value of 1: %f\n", cells[0].weight);
+	cells[0].weight = 1.0;
 
 	return;
 
@@ -249,10 +196,9 @@ error:
  */
 void Free_Geom()
 {
-	MPI_Win_free(&(cells[0].faces_win));
-	MPI_Win_free(&(cells[1].faces_win));
-	MPI_Win_free(&cells_win);
-	MPI_Win_free(&surfs_win);
+	free(cells->faces);
+	free(cells);
+	free(surfs);
 
 	return;
 }
