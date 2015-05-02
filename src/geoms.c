@@ -62,8 +62,8 @@ Face *Faces_Allocate_Shared(Cell *cell)
 	MPI_Win_allocate_shared(faces_size, faces_disp, MPI_INFO_NULL, shmem_comm,
 			&(cell->faces), &(cell->faces_win));
 	MPI_Win_shared_query(cell->faces_win, 0, &faces_size, &faces_disp, &(cell->faces));
-	MPI_Win_fence(0, cell->faces_win);
 	check(cell->faces != NULL, "Could not allocate space for faces.");
+	MPI_Win_fence(0, cell->faces_win);
 
 	return cell->faces;
 
@@ -103,9 +103,9 @@ void Default_Geom()
 	MPI_Win_allocate_shared(surfs_size, surfs_disp, MPI_INFO_NULL, shmem_comm,
 			&surfs, &surfs_win);
 	MPI_Win_shared_query(surfs_win, 0, &surfs_size, &surfs_disp, &surfs);
-	MPI_Win_fence(0, surfs_win);
 	check(surfs != NULL, "Could not allocate space for surfaces.");
 
+	MPI_Win_fence(0, surfs_win);
 	if(shmem_rank == 0) {
 		Point temp_point;	// Temporary point used for creating each plane.
 		Vector temp_vec;	// Temporary vector used for creating each plane.
@@ -201,9 +201,9 @@ void Default_Geom()
 	MPI_Win_allocate_shared(cells_size, cells_disp, MPI_INFO_NULL, shmem_comm,
 			&cells, &cells_win);
 	MPI_Win_shared_query(cells_win, 0, &cells_size, &cells_disp, &cells);
-	MPI_Win_fence(0, cells_win);
 	check(cells != NULL, "Could not allocate space for cells.");
 
+	MPI_Win_fence(0, cells_win);
 	if(shmem_rank == 0) {
 		cells[0].nfaces = 26;
 	}
@@ -217,6 +217,20 @@ void Default_Geom()
 		cells[0].weight = 1.0;
 	}
 	MPI_Win_fence(0, cells[0].faces_win);
+	MPI_Win_fence(0, cells_win);
+	if(shmem_rank == 0) {
+		cells[1].nfaces = 26;
+	}
+	MPI_Win_fence(0, cells_win);
+	cells[1].faces = Faces_Allocate_Shared(&cells[1]);
+	if(shmem_rank == 0) {
+		for(i = 0; i < cells[1].nfaces; i++) {
+			cells[1].faces[i].sense = POS;
+			cells[1].faces[i].surf = &surfs[i];
+		}
+		cells[1].weight = 0.0;
+	}
+	MPI_Win_fence(0, cells[1].faces_win);
 
 	printf("Expect a value of 1: %f\n", cells[0].weight);
 
@@ -236,6 +250,7 @@ error:
 void Free_Geom()
 {
 	MPI_Win_free(&(cells[0].faces_win));
+	MPI_Win_free(&(cells[1].faces_win));
 	MPI_Win_free(&cells_win);
 	MPI_Win_free(&surfs_win);
 
