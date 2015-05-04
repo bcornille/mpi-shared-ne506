@@ -4,19 +4,27 @@ INCPATH=-I/home/bcornille/usr/sprng/sprng5/include
 LIBPATH=-L/home/bcornille/usr/sprng/sprng5/lib
 LIBS=-lm -lsprng
 
+OBJS=comms.o geoms.o source.o trans.o
+
 default: ShMemMC_MPI
 
-ShMemMC_MPI: ShMemMC_MPI.o comms.o geoms.o
+ShMemMC_MPI: ShMemMC_MPI.o $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBPATH) $(LIBS)
 
-ShMemMC_MPI.o: ShMemMC_MPI.c comms.o geoms.o
+ShMemMC_MPI.o: ShMemMC_MPI.c $(OBJS) comms.h
 	$(CC) $(CFLAGS) -c $(INCPATH) $< -o $@
 
-comms.o: comms.h
+comms.o: comms.h source.h geoms.h
 
-geoms.o: geoms.h
+geoms.o: geoms.h comms.h dbg.h
 
-comms.h: geoms.h
+source.o: source.h dbg.h
+
+source.h: trans.h
+
+trans.o: trans.h
+
+trans.h: geoms.h
 
 .PHONY: clean
 clean:

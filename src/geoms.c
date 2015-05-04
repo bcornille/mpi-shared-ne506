@@ -14,8 +14,8 @@
 #include <math.h>
 #include <mpi.h>
 #include "dbg.h"
-#include "geoms.h"
 #include "comms.h"
+#include "geoms.h"
 
 // Define all external varialbles at file scope.
 int nsurfs = 0;
@@ -190,9 +190,9 @@ error:
 //! Free geometry elements.
 /*!
  * Arrays that need freed:
- * 	1. surfs
- * 	2. cells
- * 		a. faces
+ * 	1. #surfs
+ * 	2. #cells
+ * 	  1. Cell#faces
  */
 void Free_Geom()
 {

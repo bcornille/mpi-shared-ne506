@@ -11,10 +11,14 @@
  *
  * ShMemMC_MPI_Init - Main routine for initializing MPI for this program.
  *
+ * ShMemMC_MPI_Finalize - Main routine for cleaning up variables and MPI for
+ * 	this program.
+ *
  ******************************************************************************/
 
 // Dependencies and necessary inclusions.
-#include <mpi.h>
+#include "geoms.h"
+#include "source.h"
 #include "comms.h"
 
 // Define and initialize all external variables.
@@ -50,15 +54,24 @@ void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 									 * file. */
 	}
 
+	if(*argc_ptr == 1) {
+		Default_Source();
+	} else {
+		Source_Init(*argv_ptr[1]);
+	}
+
+	init_sprng(SEED,SPRNG_DEFAULT,0);
+
 	return;
 }
 
 //! Clean up various portions of the code.
 /*!
  * Allocated arrays in various code segments:
- *
- * 	* geoms:
- * 		1. surfs
+ *  1. geoms.c :
+ *    1. #surfs
+ *    2. #cells
+ *      1. Cell#faces
  */
 void ShMemMC_MPI_Finalize()
 {

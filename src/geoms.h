@@ -9,7 +9,7 @@
 /*!
  * The sense of a face can be positive or negative.
  */
-typedef enum Sense {POS, NEG} Sense;
+typedef enum Sense {POS = 1, NEG = -1} Sense;
 
 //! Surface structure definition.
 /*!
@@ -49,11 +49,14 @@ typedef struct Face {
  * and a cell material.
  */
 typedef struct Cell {
-	int nfaces;			//!< Number of surfaces defining the cell exterior.
-	Face *faces;		//!< Pointer array to all faces.
-	double weight;		/*!< How the cell should be weighted during particle
-						 *   transport. */
-//	Material mat;	// Cell material.
+	//! Number of surfaces defining the cell exterior.
+	int nfaces;
+	//! Pointer array to all faces.
+	Face *faces;
+	//! How the cell should be weighted during particle transport.
+	double weight;
+	//! Cell material.
+	Material mat;
 } Cell;
 
 //! Point structure definition.

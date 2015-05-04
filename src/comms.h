@@ -6,7 +6,6 @@
 #define _comms_h
 
 #include <mpi.h>
-#include "geoms.h"
 
 // MPI Communicators.
 extern MPI_Comm all_comm;	//!< Complete communicator
