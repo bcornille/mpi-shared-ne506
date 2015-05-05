@@ -180,6 +180,7 @@ void Default_Geom()
 		cells[0].faces[i].surf = &surfs[i];
 	}
 	cells[0].weight = 1.0;
+	cells[0].mat = Default_Material();
 
 	return;
 

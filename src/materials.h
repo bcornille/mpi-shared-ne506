@@ -9,9 +9,10 @@
 typedef Vector (*Scatter)(Vector v);
 
 typedef struct Material {
-	char* name;
 	double lac;
-	Scatter *scat_func;
+	Scatter scat_func;
 } Material;
+
+Material Default_Material();
 
 #endif

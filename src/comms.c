@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 // Dependencies and necessary inclusions.
+#include "rngsets.h"
 #include "geoms.h"
 #include "source.h"
 #include "comms.h"
