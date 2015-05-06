@@ -14,7 +14,7 @@
 /* For now we will just make a hard definition of the number of source particles
  * used for the simulation.  This will need to be made flexible in a usable 
  * code. */
-#define n_source_parts 1000000
+#define n_source_parts 10
 
 //! Main program.
 /*!
