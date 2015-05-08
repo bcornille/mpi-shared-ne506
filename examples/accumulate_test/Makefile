@@ -1,5 +1,5 @@
 CC=mpicc
-CFLAGS= -c -g -Wall
+CFLAGS= -c -g -Og -Wall
 
 accum : mpi_accum_test.o
 	$(CC) mpi_accum_test.o -o accum

@@ -84,21 +84,21 @@ Node* New_Node(Node* node, int new_val)
 
 void Clean_List()
 {
+	Node *curr_node = head;
+	MPI_Win curr_win = head_win;
 	MPI_Win temp_win;
 	Node *temp_next = NULL;
 
-	while(head->next != NULL) {
-		temp_win = head->next->next_win;
-		temp_next = head->next->next;
-		MPI_Win_fence(0, head->next_win);
-		MPI_Win_free(&(head->next_win));
-		head->next_win = temp_win;
-		head->next = temp_next;
+	while(curr_node) {
+		temp_win = curr_node->next_win;
+		temp_next = curr_node->next;
+		MPI_Barrier(shmem_comm);
+		MPI_Win_free(&curr_win);
+		curr_win = temp_win;
+		curr_node = temp_next;
 	}
 
-	MPI_Win_fence(0, head_win);
-	MPI_Win_free(&head_win);
-	head = NULL;
+	head = tail = NULL;
 
 	return;
 }
@@ -119,6 +119,8 @@ int main(int argc, char *argv[])
 	}
 
 	Clean_List();
+
+	MPI_Finalize();
 
 	return 0;
 }

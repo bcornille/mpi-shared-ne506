@@ -30,10 +30,11 @@ int main(int argc, char *argv[])
 	long long i = 0;
 	long long nperp = NPERP;
 	int one = 1;
+	MPI_Aint disp = 0;
 	MPI_Win_fence(0, shwin);
 	double time = -MPI_Wtime();
 	for(i = 0; i < nperp; i++) {
-		MPI_Accumulate(&one, 1, MPI_INT, 0, 0, 1, MPI_LONG_LONG, MPI_SUM, shwin);
+		MPI_Accumulate(&one, 1, MPI_INT, 0, disp, 1, MPI_LONG_LONG, MPI_SUM, shwin);
 	}
 	MPI_Win_fence(0, shwin);
 	time += MPI_Wtime();

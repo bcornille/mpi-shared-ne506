@@ -1,4 +1,4 @@
-CC=/usr/local/mvapich/bin/mpicc
+CC=/usr/local/openmpi/bin/mpicc
 CFLAGS= -c -O0 -g -Wall
 
 ll : mpi_shmem_ll.o

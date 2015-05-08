@@ -1,5 +1,5 @@
-CC=mpic++
-CFLAGS=-g -O0 -Wall
+CC=/usr/local/openmpi/bin/mpic++
+CFLAGS=-g -Og -Wall
 INCPATH=-I/home/bcornille/usr/sprng/sprng5/include
 LIBPATH=-L/home/bcornille/usr/sprng/sprng5/lib
 LIBS=-lm -lsprng
