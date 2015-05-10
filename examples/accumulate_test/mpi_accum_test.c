@@ -19,36 +19,36 @@ int main(int argc, char *argv[])
 
 	MPI_Aint size = 0;
 	if(rank == 0) {
-		size = sizeof(long long);
+		size = sizeof(int);
 	}
 	MPI_Win shwin;
-	long long *shptr;
-	int disp_unit = sizeof(long long);
+	int *shptr;
+	int disp_unit = sizeof(int);
 	MPI_Win_allocate_shared(size, disp_unit, MPI_INFO_NULL, shmcomm, &shptr, &shwin);
 	MPI_Win_shared_query(shwin, 0, &size, &disp_unit, &shptr);
 
-	long long i = 0;
-	long long nperp = NPERP;
+	int i = 0;
+	int nperp = NPERP;
 	int one = 1;
 	MPI_Aint disp = 0;
 	MPI_Win_fence(0, shwin);
 	double time = -MPI_Wtime();
 	for(i = 0; i < nperp; i++) {
-		MPI_Accumulate(&one, 1, MPI_INT, 0, disp, 1, MPI_LONG_LONG, MPI_SUM, shwin);
+		MPI_Accumulate(&one, 1, MPI_INT, 0, disp, 1, MPI_INT, MPI_SUM, shwin);
 	}
 	MPI_Win_fence(0, shwin);
 	time += MPI_Wtime();
 
 	int ssize;
 	MPI_Comm_size(shmcomm, &ssize);
-	long long Ntot = nperp*ssize;
+	int Ntot = nperp*ssize;
 	if(srank == 0) {
 		if(shptr[0] == Ntot) {
 			printf("This message should appear everytime because this works.\n");
 			printf("The looping took %f seconds this way.\n", time);
 		} else {
-			printf("The shared accumulator only counted to %lld, "
-					"when it should have gotten to %lld.\n"
+			printf("The shared accumulator only counted to %d, "
+					"when it should have gotten to %d.\n"
 					"This message from global rank %d.\n",
 					shptr[0], Ntot, rank);
 		}

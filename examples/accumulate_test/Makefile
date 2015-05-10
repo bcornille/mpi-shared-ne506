@@ -1,5 +1,5 @@
-CC=mpicc
-CFLAGS= -c -g -Og -Wall
+CC=/usr/local/openmpi/bin/mpicc
+CFLAGS= -c -g -O3 -Wall
 
 accum : mpi_accum_test.o
 	$(CC) mpi_accum_test.o -o accum
