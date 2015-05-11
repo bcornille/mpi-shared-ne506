@@ -20,6 +20,7 @@
 #include "rngsets.h"
 #include "geoms.h"
 #include "source.h"
+#include "tally.h"
 #include "comms.h"
 
 // Define and initialize all external variables.
@@ -59,6 +60,12 @@ void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 		Default_Source();
 	} else {
 		Source_Init(*argv_ptr[1]);
+	}
+
+	if(*argc_ptr == 1) {
+		Default_Tally();
+	} else {
+		Tally_Init(*argv_ptr[1]);
 	}
 
 	init_sprng(SEED,SPRNG_DEFAULT,0);

@@ -4,7 +4,7 @@ INCPATH=-I/home/bcornille/usr/sprng/sprng5/include
 LIBPATH=-L/home/bcornille/usr/sprng/sprng5/lib
 LIBS=-lm -lsprng
 
-OBJS=comms.o geoms.o source.o trans.o materials.o
+OBJS=comms.o geoms.o materials.o source.o tally.o trans.o
 
 default: ShMemMC_MPI
 
@@ -13,7 +13,7 @@ ShMemMC_MPI: ShMemMC_MPI.o $(OBJS)
 
 ShMemMC_MPI.o: ShMemMC_MPI.c $(OBJS) comms.h Makefile
 
-comms.o: comms.c comms.h source.h geoms.h rngsets.h
+comms.o: comms.c comms.h tally.h source.h geoms.h rngsets.h
 	$(CC) $(CFLAGS) -c $(INCPATH) $< -o $@
 
 geoms.o: geoms.c geoms.h comms.h dbg.h
@@ -26,6 +26,8 @@ materials.o: materials.c geoms.h rngsets.h
 source.o: source.c source.h dbg.h
 
 source.h: trans.h
+
+tally.o: tally.c tally.h comms.h dbg.h
 
 trans.o: trans.c trans.h rngsets.h
 	$(CC) $(CFLAGS) -c $(INCPATH) $< -o $@
