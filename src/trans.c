@@ -10,6 +10,7 @@
 #include <math.h>
 #include "rngsets.h"
 #include "source.h"
+#include "tally.h"
 #include "trans.h"
 
 Particle *curr_part = NULL;
@@ -75,6 +76,8 @@ Point Jump(Point r_i, double s, Vector v_hat)
 	r_f.y = r_i.y + s*v_hat.v;
 	r_f.z = r_i.z + s*v_hat.w;
 
+	Score_Tallies(r_i,r_f);
+
 	return r_f;
 }
 
@@ -89,6 +92,7 @@ Particle *Propagate(Particle *part)
 		if(s_c < s_b) {
 			part->r = Jump(part->r,s_c,part->v_hat);
 			part->v_hat = part->in_cell->mat.scat_func(part->v_hat);
+			part->on_surf = NULL;
 			//printf("Particle position (%f, %f, %f)\n", part->r.x, part->r.y, part->r.z);
 		} else {
 			part->r = Jump(part->r,s_b,part->v_hat);

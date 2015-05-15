@@ -85,6 +85,7 @@ void ShMemMC_MPI_Finalize()
 {
 	// Dismantle geometry.
 	Free_Geom();
+	Free_Tallies();
 
 	// Finalize MPI.
 	MPI_Finalize();

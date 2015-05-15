@@ -8,6 +8,8 @@
 
 #include <mpi.h>
 
+typedef enum Dir {X = 0, Y = 1, Z = 2} Dir;
+
 typedef struct XYZMesh {
 	int nx;
 	int ny;
@@ -22,7 +24,15 @@ typedef struct XYZMesh {
 	double *tally;
 } XYZMesh;
 
+typedef struct Indices_3D {
+	int i;
+	int j;
+	int k;
+} Indices_3D;
+
 void Default_Tally();
 void Tally_Init(char *File_in);
+void Score_Tallies(Point r_0, Point r_1);
+void Free_Tallies();
 
 #endif
