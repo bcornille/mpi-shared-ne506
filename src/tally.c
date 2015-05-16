@@ -162,10 +162,14 @@ Dir Min_Dir(double d[3])
 
 void Score_XYZMesh(XYZMesh *mesh, Indices_3D ijk, double *score)
 {
-	MPI_Aint disp = mesh->ny*mesh->nz*ijk.i + mesh->nz*ijk.j + ijk.k;
+	if(shmem_size == 1) {
+		mesh->tally[mesh->ny*mesh->nz*ijk.i + mesh->nz*ijk.j + ijk.k] += *score;
+	} else {
+		MPI_Aint disp = mesh->ny*mesh->nz*ijk.i + mesh->nz*ijk.j + ijk.k;
 
-	MPI_Accumulate(score, 1, MPI_DOUBLE, 0, disp, 1, MPI_DOUBLE, MPI_SUM,
-			mesh->tally_win);
+		MPI_Accumulate(score, 1, MPI_DOUBLE, 0, disp, 1, MPI_DOUBLE, MPI_SUM,
+				mesh->tally_win);
+	}
 
 	return;
 }
