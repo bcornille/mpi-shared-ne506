@@ -14,7 +14,7 @@
 /* For now we will just make a hard definition of the number of source particles
  * used for the simulation.  This will need to be made flexible in a usable 
  * code. */
-#define n_source_parts 100000
+// #define n_source_parts 100000
 
 //! Main program.
 /*!
@@ -24,7 +24,12 @@
 int main(int argc, char *argv[])
 {
 	// Initialize the program based on input.
-	ShMemMC_MPI_Init(&argc, &argv);
+	ShMemMC_MPI_Init(argc, argv);
+
+	if(all_rank == 0 && argc == 1) {
+		printf("Usage: ShMemMC <nparts> <nmesh>\n");
+		printf("Running default calculation with 10 particles and nmesh 10.\n");
+	}
 
 	ShMemMC_Transport(n_source_parts);
 

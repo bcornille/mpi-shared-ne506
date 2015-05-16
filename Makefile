@@ -14,7 +14,7 @@ test:
 clean: clean_doxy clean_src clean_test
 
 clean_doxy:
-	rm -rf doc/
+	rm -rf docs/html/ docs/latex/
 
 clean_src:
 	cd src/; make clean; cd ../

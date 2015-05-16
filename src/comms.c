@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 // Dependencies and necessary inclusions.
+#include <stdlib.h>
 #include "rngsets.h"
 #include "geoms.h"
 #include "source.h"
@@ -30,16 +31,18 @@ int all_rank;
 int all_size;
 int shmem_rank;
 int shmem_size;
+int n_source_parts;
+int nmesh;
 
 //! Program specific initialization.
 /*! 
  * \param argc pointer to number of arguments
  * \param argv pointer to arguments
  */
-void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
+void ShMemMC_MPI_Init(int argc_cpy, char* argv_cpy[])
 {
 	// Standard MPI Initialization bits.
-	MPI_Init(argc_ptr, argv_ptr);
+	MPI_Init(&argc_cpy, &argv_cpy);
 	MPI_Comm_rank(all_comm, &all_rank);
 	MPI_Comm_size(all_comm, &all_size);
 
@@ -49,23 +52,35 @@ void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr)
 	MPI_Comm_rank(shmem_comm, &shmem_rank);
 	MPI_Comm_size(shmem_comm, &shmem_size);
 
-	if(*argc_ptr == 1) {
+	if(argc_cpy == 1) {
+		n_source_parts = 10;
+	} else {
+		n_source_parts = atoi(argv_cpy[1]);
+	}
+
+	if(argc_cpy <= 2) {
+		nmesh = 10;
+	} else {
+		nmesh = atoi(argv_cpy[2]);
+	}
+
+	if(argc_cpy <= 3) {
 		Default_Geom();		// Use the default geometry.
 	} else {
-		Geom_Init(*argv_ptr[1]);	/* Generate the geometry based on the input
+		Geom_Init(argv_cpy[3]);	/* Generate the geometry based on the input
 									 * file. */
 	}
 
-	if(*argc_ptr == 1) {
+	if(argc_cpy <= 3) {
 		Default_Source();
 	} else {
-		Source_Init(*argv_ptr[1]);
+		Source_Init(argv_cpy[3]);
 	}
 
-	if(*argc_ptr == 1) {
+	if(argc_cpy <= 3) {
 		Default_Tally();
 	} else {
-		Tally_Init(*argv_ptr[1]);
+		Tally_Init(argv_cpy[3]);
 	}
 
 	init_sprng(SEED,SPRNG_DEFAULT,0);

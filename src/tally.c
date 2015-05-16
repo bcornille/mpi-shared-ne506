@@ -11,7 +11,7 @@
 #include "trans.h"
 #include "tally.h"
 
-#define nmesh 100
+// #define nmesh 100
 
 XYZMesh *xyztallies = NULL;
 

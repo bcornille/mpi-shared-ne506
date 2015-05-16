@@ -17,8 +17,12 @@ extern int all_size;	//!< Total number of processes
 extern int shmem_rank;	//!< Process rank in shared memory communicator
 extern int shmem_size;	//!< Size of shared memory communicator
 
+// Number of source particles.
+extern int n_source_parts;	//!< Number of source particles
+extern int nmesh;			//!< Temporary: default mesh size
+
 // Routines.
-void ShMemMC_MPI_Init(int *argc_ptr, char* **argv_ptr);
+void ShMemMC_MPI_Init(int argc_cpy, char* argv_cpy[]);
 void ShMemMC_MPI_Finalize();
 
 #endif
