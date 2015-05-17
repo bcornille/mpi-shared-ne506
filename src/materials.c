@@ -35,7 +35,7 @@ Vector Hard_Sphere(Vector v_hat)
 {
 	Vector e1;
 	Vector e2;
-	double theta = 2*acos(sprng());
+	double theta = 2*acos(sqrt(sprng()));
 	double phi = 2*M_PI*sprng();
 	Vector v_prime;
 
