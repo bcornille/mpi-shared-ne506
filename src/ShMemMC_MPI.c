@@ -6,8 +6,7 @@
  ******************************************************************************/
 
 // Dependencies and necessary inclusions.
-#include <mpi.h>
-
+#include <stdio.h>
 #include "comms.h"
 #include "trans.h"
 
@@ -31,7 +30,15 @@ int main(int argc, char *argv[])
 		printf("Running default calculation with 10 particles and nmesh 10.\n");
 	}
 
+	MPI_Barrier(all_comm);
+	double timer = -MPI_Wtime();
 	ShMemMC_Transport(n_source_parts);
+	MPI_Barrier(all_comm);
+	timer += MPI_Wtime();
+
+	if(all_rank == 0) {
+		printf("Particle transport took %f seconds.\n", timer);
+	}
 
 	ShMemMC_MPI_Finalize();
 
