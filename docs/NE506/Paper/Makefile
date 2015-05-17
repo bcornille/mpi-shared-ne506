@@ -8,7 +8,10 @@ latexopt = -halt-on-error -file-line-error -output-directory=build
 # Generate PDF of manuscript using PdfLaTeX
 #=================================================================
 
-all: $(manuscript).pdf
+all: timings.eps $(manuscript).pdf
+
+timings.eps: timings.gpi timings.dat
+	gnuplot timings.gpi
 
 $(manuscript).pdf: $(manuscript).tex references.bib
 	mkdir -p build
@@ -22,6 +25,6 @@ $(manuscript).pdf: $(manuscript).tex references.bib
 #=================================================================
 
 clean:
-	rm -fr build
+	rm -fr build timings.eps
 
 .PHONY: all clean
