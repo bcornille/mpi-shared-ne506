@@ -4,7 +4,7 @@ set xlabel "Number of Processes Sharing a Tally"
 set ylabel "Execution Time (s)"
 set title "Cost of Shared Memory Tallies" font ",24"
 set xr [1:20]
-set yr [0:810]
+set yr [0:800]
 set xtics nomirror
 set key left
 set style line 1 lt 1 lc rgb "red"   lw 3
