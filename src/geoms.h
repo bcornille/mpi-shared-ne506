@@ -5,6 +5,27 @@
 #ifndef _geoms_h
 #define _geoms_h
 
+//! Point structure definition.
+/*!
+ * A point has coordinates x, y, and z.
+ */
+typedef struct Point {
+	double x;	//!< x-coordinate.
+	double y;	//!< y-coordinate.
+	double z;	//!< z-coordinate.
+} Point;
+
+//! Vector structure definition.
+/*!
+ * A vector points a distance u in the x direction,
+ * v in the y direction, and w in the z direction.
+ */
+typedef struct Vector {
+	double u;	//!< Magnitude along x-coordinate.
+	double v;	//!< Magnitude along y-coordinate.
+	double w;	//!< Magnitude along z-coordinate.
+} Vector;
+
 //! Sense type definition.
 /*!
  * The sense of a face can be positive or negative.
@@ -43,6 +64,8 @@ typedef struct Face {
 	Surface *surf;	//!< Pointer to the surface that defines this face.
 } Face;
 
+#include "materials.h"
+
 //! Cell structure definition.
 /*!
  * Cells have a number of faces, those face definitions,
@@ -58,27 +81,6 @@ typedef struct Cell {
 	//! Cell material.
 	Material mat;
 } Cell;
-
-//! Point structure definition.
-/*!
- * A point has coordinates x, y, and z.
- */
-typedef struct Point {
-	double x;	//!< x-coordinate.
-	double y;	//!< y-coordinate.
-	double z;	//!< z-coordinate.
-} Point;
-
-//! Vector structure definition.
-/*!
- * A vector points a distance u in the x direction,
- * v in the y direction, and w in the z direction.
- */
-typedef struct Vector {
-	double u;	//!< Magnitude along x-coordinate.
-	double v;	//!< Magnitude along y-coordinate.
-	double w;	//!< Magnitude along z-coordinate.
-} Vector;
 
 //! Number of surfaces defined for the geometry.
 /*!

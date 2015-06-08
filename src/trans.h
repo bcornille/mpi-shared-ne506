@@ -16,6 +16,8 @@ typedef struct Particle {
 	struct Particle *next;
 } Particle;
 
+extern Particle *curr_part;
+
 void ShMemMC_Transport(int nparts_gen);
 
 #endif
