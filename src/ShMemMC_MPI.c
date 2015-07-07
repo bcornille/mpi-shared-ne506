@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	ShMemMC_MPI_Init(argc, argv);
 
 	if(all_rank == 0 && argc == 1) {
-		printf("Usage: ShMemMC <nparts> <nmesh>\n");
+		printf("Usage: ShMemMC <nparts> <nmesh> <nsplit>\n");
 		printf("Running default calculation with 10 particles and nmesh 10.\n");
 	}
 
