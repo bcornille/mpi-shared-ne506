@@ -136,6 +136,150 @@ ShMemMC_MPI.c.s:
 	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/ShMemMC_MPI.c.s
 .PHONY : ShMemMC_MPI.c.s
 
+comms.o: comms.c.o
+.PHONY : comms.o
+
+# target to build an object file
+comms.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/comms.c.o
+.PHONY : comms.c.o
+
+comms.i: comms.c.i
+.PHONY : comms.i
+
+# target to preprocess a source file
+comms.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/comms.c.i
+.PHONY : comms.c.i
+
+comms.s: comms.c.s
+.PHONY : comms.s
+
+# target to generate assembly for a file
+comms.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/comms.c.s
+.PHONY : comms.c.s
+
+geoms.o: geoms.c.o
+.PHONY : geoms.o
+
+# target to build an object file
+geoms.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/geoms.c.o
+.PHONY : geoms.c.o
+
+geoms.i: geoms.c.i
+.PHONY : geoms.i
+
+# target to preprocess a source file
+geoms.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/geoms.c.i
+.PHONY : geoms.c.i
+
+geoms.s: geoms.c.s
+.PHONY : geoms.s
+
+# target to generate assembly for a file
+geoms.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/geoms.c.s
+.PHONY : geoms.c.s
+
+materials.o: materials.c.o
+.PHONY : materials.o
+
+# target to build an object file
+materials.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/materials.c.o
+.PHONY : materials.c.o
+
+materials.i: materials.c.i
+.PHONY : materials.i
+
+# target to preprocess a source file
+materials.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/materials.c.i
+.PHONY : materials.c.i
+
+materials.s: materials.c.s
+.PHONY : materials.s
+
+# target to generate assembly for a file
+materials.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/materials.c.s
+.PHONY : materials.c.s
+
+source.o: source.c.o
+.PHONY : source.o
+
+# target to build an object file
+source.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/source.c.o
+.PHONY : source.c.o
+
+source.i: source.c.i
+.PHONY : source.i
+
+# target to preprocess a source file
+source.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/source.c.i
+.PHONY : source.c.i
+
+source.s: source.c.s
+.PHONY : source.s
+
+# target to generate assembly for a file
+source.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/source.c.s
+.PHONY : source.c.s
+
+tally.o: tally.c.o
+.PHONY : tally.o
+
+# target to build an object file
+tally.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/tally.c.o
+.PHONY : tally.c.o
+
+tally.i: tally.c.i
+.PHONY : tally.i
+
+# target to preprocess a source file
+tally.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/tally.c.i
+.PHONY : tally.c.i
+
+tally.s: tally.c.s
+.PHONY : tally.s
+
+# target to generate assembly for a file
+tally.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/tally.c.s
+.PHONY : tally.c.s
+
+trans.o: trans.c.o
+.PHONY : trans.o
+
+# target to build an object file
+trans.c.o:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/trans.c.o
+.PHONY : trans.c.o
+
+trans.i: trans.c.i
+.PHONY : trans.i
+
+# target to preprocess a source file
+trans.c.i:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/trans.c.i
+.PHONY : trans.c.i
+
+trans.s: trans.c.s
+.PHONY : trans.s
+
+# target to generate assembly for a file
+trans.c.s:
+	cd /home/bcornille/Documents/School/NE506/FinalProject/mpi-shared-ne506 && $(MAKE) -f src/CMakeFiles/ShMemMC_MPI.dir/build.make src/CMakeFiles/ShMemMC_MPI.dir/trans.c.s
+.PHONY : trans.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -148,6 +292,24 @@ help:
 	@echo "... ShMemMC_MPI.o"
 	@echo "... ShMemMC_MPI.i"
 	@echo "... ShMemMC_MPI.s"
+	@echo "... comms.o"
+	@echo "... comms.i"
+	@echo "... comms.s"
+	@echo "... geoms.o"
+	@echo "... geoms.i"
+	@echo "... geoms.s"
+	@echo "... materials.o"
+	@echo "... materials.i"
+	@echo "... materials.s"
+	@echo "... source.o"
+	@echo "... source.i"
+	@echo "... source.s"
+	@echo "... tally.o"
+	@echo "... tally.i"
+	@echo "... tally.s"
+	@echo "... trans.o"
+	@echo "... trans.i"
+	@echo "... trans.s"
 .PHONY : help
 
 
