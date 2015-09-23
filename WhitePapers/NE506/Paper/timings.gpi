@@ -2,7 +2,7 @@ set terminal pdf
 set output "timings.pdf"
 set xlabel "Number of Processes Sharing a Tally"
 set ylabel "Execution Time (s)"
-set title "Cost of Shared Memory Tallies" font ",24"
+set title "Cost of Shared Memory Tallies" font ",16"
 set xr [1:20]
 set yr [0:800]
 set xtics nomirror
